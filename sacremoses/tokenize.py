@@ -439,10 +439,10 @@ class MosesDetokenizer(object):
         tokens = text.split()
         # Iterate through every token and apply language specific detokenization rule(s).
         for i, token in enumerate(iter(tokens)):
-            # Check if the first char is CJK.
+
             if is_cjk(token[0]):
                 # Perform left shift if this is a second consecutive CJK word.
-                if i > 0 and is_cjk(token[-1]):
+                if (i > 0 and is_cjk(tokens[i - 1][-1])) and self.lang != "ko":
                     detokenized_text += token
                 # But do nothing special if this is a CJK word that doesn't follow a CJK word
                 else:
@@ -547,5 +547,6 @@ class MosesDetokenizer(object):
     def detokenize(self, tokens, return_str=True, unescape=True):
         """ Duck-typing the abstract *tokenize()*."""
         return self.tokenize(tokens, return_str, unescape)
+
 
 __all__ = ['MosesTokenizer', 'MosesDetokenizer']
